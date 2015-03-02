@@ -1,23 +1,22 @@
-var bestPictures = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote: 'data/ever.json?%QUERY'
-});
-
-asdf = function(query, cb){
+function search(query, cb) {
     var query = $('#search_form').serialize();
-    $.get('data/ever.json?'+query, function(data){
-        cb(data);
+    $('.icon-search').hide();
+    $('.icon-loading').show();
+    $('.btn-success').attr('disabled','disabled');
+    $.get('data/ever.json?' + query, function(data) {
+        //Simulate real fetch by waiting 2s
+        setTimeout(function() {
+            cb(data);
+            $('.icon-search').show();
+            $('.icon-loading').hide();
+            $('.btn-success').removeAttr('disabled');
+        }, 2000)
     }, 'json')
 }
 
-//bestPictures.ttAdapter()
 
-bestPictures.initialize();
-
-var $input = $('.typeahead');
-$input.typeahead(null, {
-    source: asdf,
+$('.typeahead').typeahead(null, {
+    source: search,
     name: 'best-pictures',
     displayKey: 'value',
     autoSelect: true,
@@ -45,7 +44,7 @@ $('.country-item').on('click', function() {
     $('input[name="countryCode"]').val($(this).attr('data-code'))
 })
 
-$('[data-toggle="tooltip"]').tooltip();
+
 
 $('#search_form').submit(function(e) {
     e.preventDefault();
@@ -54,6 +53,7 @@ $('#search_form').submit(function(e) {
 
 $row = $('.periodic-row');
 
-for(var i = 0; i< 160; i++){
-    $row.prepend('<div class="cell" style=""> <div class="element" style="background-position:'+(128*i)+'px 0px"></div> </div>' )
+//Create icons at bottom 
+for (var i = 0; i < 160; i++) {
+    $row.prepend('<div class="cell" style=""> <div class="element" style="background-position:' + (128 * i) + 'px 0px"></div> </div>')
 }
